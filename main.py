@@ -177,10 +177,10 @@ def main():
     index_writer = OASIndexWriter(
         dest_root,
         openapi_version="3.0.0",
-        version="0.0.1",
-        title="test api",
-        description="test description",
-        server_urls=["https://example.com"],
+        version=os.environ["OAS_VERSION"],
+        title=os.environ["OAS_TITLE"],
+        description=os.environ["OAS_DESCRIPTION"],
+        server_urls=os.environ["OAS_SERVER_URLS"].split(","),
         components={
             "schemas": yaml.safe_load(schema_index_writer.dest.read_text())
         },
