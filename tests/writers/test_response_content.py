@@ -39,7 +39,7 @@ class TestOASResponseContentWriter:
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/GetPostCommentsResponse"
+                                    "$$ref": "#/components/schemas/GetPostCommentsResponse"
                                 }
                             }
                         },
