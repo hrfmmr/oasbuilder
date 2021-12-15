@@ -1,0 +1,19 @@
+{
+  "name": "openapi-boilerplate",
+  "version": "0.0.1",
+  "description": "Multi-file boilerplate for Open API Specification.",
+  "main": "index.js",
+  "scripts": {
+    "build": "swagger-cli bundle .tmp/index.yml --outfile .bundle/oas.yml --type yaml",
+    "lint": "npm run build && spectral lint .bundle/oas.yml",
+    "preview": "npm run build && redoc-cli serve .bundle/oas.yml --options.onlyRequiredInSamples",
+    "html": "npm run build && redoc-cli bundle .bundle/oas.yml  --output .bundle/index.html --options.onlyRequiredInSamples",
+    "clean": "rm -r .bundle"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@apidevtools/swagger-cli": "^4.0.4",
+    "@stoplight/spectral": "^6.1.0",
+    "redoc-cli": "^0.10.3"
+  }
+}
