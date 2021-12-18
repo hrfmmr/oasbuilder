@@ -3,23 +3,17 @@ import pathlib
 import typing as t
 
 import yaml
-
 from oasbuilder.constants import TEMPLATE_OAS_REF
-from oasbuilder.models import (
-    HTTPMethod,
-    OASParameter,
-    OASParameterSchema,
-    SchemaType,
-)
+from oasbuilder.models import HTTPMethod, OASParameter, OASParameterSchema, SchemaType
 from oasbuilder.parser import OASParser
+from oasbuilder.types import YAML
 from oasbuilder.utils import (
-    endpoint_dir,
-    build_path_params,
     build_operation_id,
+    build_path_params,
     build_schema_identifier,
+    endpoint_dir,
 )
 from oasbuilder.utils.decorators import ensure_dest_exists
-from oasbuilder.types import YAML
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +56,7 @@ class OASEndpointMethodWriter:
         self.dest.write_text(oas_yaml)
 
     def _build(self) -> YAML:
-        oas_json = {
+        oas_json: t.Dict[str, t.Any] = {
             "summary": "",
             "operationId": build_operation_id(self.method, self.endpoint_path),
             "responses": {"$ref": "responses/_index.yml"},

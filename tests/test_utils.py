@@ -1,12 +1,11 @@
 import pytest
-
 from oasbuilder.models import HTTPMethod, SchemaType
 from oasbuilder.utils import (
+    build_operation_id,
+    build_schema_identifier,
     parameterized_endpoint_path,
     to_endpoint_dir,
     to_endpoint_path,
-    build_operation_id,
-    build_schema_identifier,
 )
 
 

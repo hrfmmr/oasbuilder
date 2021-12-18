@@ -3,13 +3,10 @@ import re
 import typing as t
 
 import yaml
-
-from oasbuilder.models import (
-    HTTPMethod,
-)
+from oasbuilder.models import HTTPMethod
+from oasbuilder.types import YAML
 from oasbuilder.utils import endpoint_dir
 from oasbuilder.utils.decorators import ensure_dest_exists
-from oasbuilder.types import YAML
 
 
 class OASEndpointMethodPatternWriter:
@@ -27,9 +24,7 @@ class OASEndpointMethodPatternWriter:
     ) -> None:
         self.dest_root = dest_root
         self.endpoint_path = endpoint_path
-        self.dest = (
-            self.dest_root / endpoint_dir(self.endpoint_path) / "_index.yml"
-        )
+        self.dest = self.dest_root / endpoint_dir(self.endpoint_path) / "_index.yml"
 
     @ensure_dest_exists
     def write(self):

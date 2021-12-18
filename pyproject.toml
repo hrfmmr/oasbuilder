@@ -11,6 +11,7 @@ python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
+pysen = {version = "0.10.1", extras = ["lint"]}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -20,3 +21,28 @@ build-backend = "poetry.core.masonry.api"
 addopts = ["--showlocals", "--verbose"]
 testpaths = ["tests",]
 filterwarnings = ["ignore::DeprecationWarning",]
+
+[tool.mypy]
+python_version = "3.8"
+no_strict_optional = true
+ignore_missing_imports = true
+check_untyped_defs = true
+
+[tool.pysen]
+version = "0.10"
+
+[tool.pysen.lint]
+enable_black = true
+enable_flake8 = true
+enable_isort = true
+enable_mypy = true
+mypy_preset = "entry"
+line_length = 88
+py_version = "py38"
+
+[[tool.pysen.lint.mypy_targets]]
+paths = ["oasbuilder/"]
+
+[tool.pysen.lint.source]
+  includes = ["."]
+  excludes = ["node_modules/", ".build/", "tests/"]

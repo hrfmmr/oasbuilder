@@ -4,11 +4,8 @@ import pprint
 
 import pytest
 import yaml
-
 from oasbuilder.utils import endpoint_dir
-from oasbuilder.writer import (
-    OASEndpointPatternWriter,
-)
+from oasbuilder.writer import OASEndpointPatternWriter
 
 logger = logging.getLogger(__name__)
 

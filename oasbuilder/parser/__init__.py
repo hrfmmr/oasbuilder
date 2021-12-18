@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +16,7 @@ class OASParser:
 
     @staticmethod
     def parse(json_data):
-        d = {}
+        d: Dict[str, Any] = {}
         if type(json_data) is dict:
             d["type"] = "object"
             d["properties"] = {}

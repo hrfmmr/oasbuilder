@@ -5,12 +5,9 @@ import pprint
 
 import pytest
 import yaml
-
 from oasbuilder.models import HTTPMethod
 from oasbuilder.utils import endpoint_dir
-from oasbuilder.writer import (
-    OASResponsePatternWriter,
-)
+from oasbuilder.writer import OASResponsePatternWriter
 
 logger = logging.getLogger(__name__)
 

@@ -4,13 +4,8 @@ import re
 import typing as t
 
 import yaml
-
-from oasbuilder.utils import (
-    endpoint_root_dir,
-    to_endpoint_dir,
-    to_endpoint_path,
-)
 from oasbuilder.types import YAML
+from oasbuilder.utils import endpoint_root_dir, to_endpoint_dir, to_endpoint_path
 
 logger = logging.getLogger(__name__)
 
@@ -41,9 +36,7 @@ class OASEndpointPatternWriter:
 
     def _find_endpoint_paths(self) -> t.Iterator[str]:
         paths = self.dest.parent.glob("*")
-        rex_endpoint_dir = re.compile(
-            r".*/paths/(?P<endpoint_dir>v[0-9]+[\w{}-]+)"
-        )
+        rex_endpoint_dir = re.compile(r".*/paths/(?P<endpoint_dir>v[0-9]+[\w{}-]+)")
         for p in paths:
             if p.is_file():
                 continue

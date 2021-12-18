@@ -6,19 +6,18 @@ import subprocess
 
 import pytest
 import yaml
-
-from oasbuilder.constants import TEMPLATE_OAS_REF, OAS_REF
+from oasbuilder.constants import OAS_REF, TEMPLATE_OAS_REF
 from oasbuilder.models import HTTPMethod
 from oasbuilder.writer import (
+    OASEndpointMethodPatternWriter,
+    OASEndpointMethodWriter,
+    OASEndpointPatternWriter,
+    OASIndexWriter,
     OASRequestBodySchemaWriter,
-    OASResponseSchemaWriter,
     OASResponseContentWriter,
     OASResponsePatternWriter,
-    OASEndpointMethodWriter,
-    OASEndpointMethodPatternWriter,
-    OASEndpointPatternWriter,
+    OASResponseSchemaWriter,
     OASSchemaIndexWriter,
-    OASIndexWriter,
 )
 
 logger = logging.getLogger(__name__)
@@ -47,7 +46,7 @@ class TestIntegratedWriters:
                             },
                             "response": {
                                 "status_code": 200,
-                                "content": '{ "postId": 1, "id": 1, "name": "id labore ex et quam laborum", "email": "Eliseo@gardner.biz", "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos" }',
+                                "content": '{ "postId": 1, "id": 1, "name": "id labore ex et quam laborum", "email": "Eliseo@gardner.biz", "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos" }',  # noqa
                             },
                         },
                     ),
@@ -57,11 +56,11 @@ class TestIntegratedWriters:
                             "request": {
                                 "method": "POST",
                                 "query": "{}",
-                                "content": '{"title": "foo", "body": "bar", "userId": 1}',
+                                "content": '{"title": "foo", "body": "bar", "userId": 1}',  # noqa
                             },
                             "response": {
                                 "status_code": 200,
-                                "content": '{"id": 101, "title": "foo", "body": "bar", "userId": 1}',
+                                "content": '{"id": 101, "title": "foo", "body": "bar", "userId": 1}',  # noqa
                             },
                         },
                     ),
@@ -72,8 +71,8 @@ class TestIntegratedWriters:
                         "paths/_index.yml",
                         "paths/v1-posts-{post_id}-comments/_index.yml",
                         "paths/v1-posts-{post_id}-comments/get/_index.yml",
-                        "paths/v1-posts-{post_id}-comments/get/responses/_index.yml",
-                        "paths/v1-posts-{post_id}-comments/get/responses/200/_index.yml",
+                        "paths/v1-posts-{post_id}-comments/get/responses/_index.yml",  # noqa
+                        "paths/v1-posts-{post_id}-comments/get/responses/200/_index.yml",  # noqa
                         "paths/v1-posts/_index.yml",
                         "paths/v1-posts/post/_index.yml",
                         "paths/v1-posts/post/responses/_index.yml",
@@ -139,7 +138,7 @@ class TestIntegratedWriters:
                                         "content": {
                                             "application/json": {
                                                 "schema": {
-                                                    "$ref": "#/components/schemas/PostPostsRequestBody"
+                                                    "$ref": "#/components/schemas/PostPostsRequestBody"  # noqa
                                                 }
                                             }
                                         }
@@ -149,11 +148,11 @@ class TestIntegratedWriters:
                                             "content": {
                                                 "application/json": {
                                                     "schema": {
-                                                        "$ref": "#/components/schemas/PostPostsResponse"
+                                                        "$ref": "#/components/schemas/PostPostsResponse"  # noqa
                                                     }
                                                 }
                                             },
-                                            "description": "Expected response to a valid request",
+                                            "description": "Expected response to a valid request",  # noqa
                                         }
                                     },
                                     "summary": "",
@@ -217,74 +216,63 @@ class TestIntegratedWriters:
             query = json.loads(input["_source"]["request"]["query"])
             request_content_raw = input["_source"]["request"]["content"]
             request_content = (
-                json.loads(request_content_raw)
-                if request_content_raw
-                else None
+                json.loads(request_content_raw) if request_content_raw else None
             )
             response_content_raw = input["_source"]["response"]["content"]
             try:
                 response_content = (
-                    json.loads(response_content_raw)
-                    if response_content_raw
-                    else None
+                    json.loads(response_content_raw) if response_content_raw else None
                 )
             except json.decoder.JSONDecodeError:
                 response_content = None
             status_code = input["_source"]["response"]["status_code"]
 
             if request_content:
-                writer = OASRequestBodySchemaWriter(
+                OASRequestBodySchemaWriter(
                     dest_root,
                     endpoint_path,
                     method,
                     request_content=request_content,
-                )
-                writer.write()
+                ).write()
 
-            writer = OASResponseSchemaWriter(
+            OASResponseSchemaWriter(
                 dest_root,
                 endpoint_path,
                 method,
                 status_code,
                 response_content,
-            )
-            writer.write()
+            ).write()
 
-            writer = OASResponseContentWriter(
+            OASResponseContentWriter(
                 dest_root,
                 endpoint_path,
                 method,
                 status_code,
                 response_content,
-            )
-            writer.write()
+            ).write()
 
-            writer = OASResponsePatternWriter(
+            OASResponsePatternWriter(
                 dest_root,
                 endpoint_path,
                 method,
-            )
-            writer.write()
+            ).write()
 
-            writer = OASEndpointMethodWriter(
+            OASEndpointMethodWriter(
                 dest_root,
                 endpoint_path,
                 method,
                 query=query,
                 request_content=request_content,
-            )
-            writer.write()
+            ).write()
 
-            writer = OASEndpointMethodPatternWriter(dest_root, endpoint_path)
-            writer.write()
+            OASEndpointMethodPatternWriter(dest_root, endpoint_path).write()
 
-        writer = OASEndpointPatternWriter(dest_root)
-        writer.write()
+        OASEndpointPatternWriter(dest_root).write()
 
         schema_index_writer = OASSchemaIndexWriter(dest_root)
         schema_index_writer.write()
 
-        writer = OASIndexWriter(
+        index_writer = OASIndexWriter(
             dest_root,
             openapi_version=spec["openapi_version"],
             version=spec["version"],
@@ -295,16 +283,12 @@ class TestIntegratedWriters:
                 "schemas": yaml.safe_load(schema_index_writer.dest.read_text())
             },
         )
-        writer.write()
+        index_writer.write()
 
-        logger.debug(
-            pprint.pformat(list(dest_root.glob("**/*.yml")), indent=2)
-        )
-        logger.debug(writer.dest.read_text())
+        logger.debug(pprint.pformat(list(dest_root.glob("**/*.yml")), indent=2))
+        logger.debug(index_writer.dest.read_text())
 
-        for path, exp_path in zip(
-            dest_root.glob("**/*.yml"), expected["paths"]
-        ):
+        for path, exp_path in zip(dest_root.glob("**/*.yml"), expected["paths"]):
             assert str(path) == str(dest_root / exp_path)
 
         bundle_dest_path = pathlib.Path(".test/bundle.yml")
@@ -312,7 +296,7 @@ class TestIntegratedWriters:
             [
                 "./node_modules/.bin/swagger-cli",
                 "bundle",
-                str(writer.dest),
+                str(index_writer.dest),
                 "--outfile",
                 str(bundle_dest_path),
                 "--type",

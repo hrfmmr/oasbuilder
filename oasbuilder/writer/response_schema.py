@@ -2,14 +2,11 @@ import pathlib
 import typing as t
 
 import yaml
-
 from oasbuilder.models import HTTPMethod
 from oasbuilder.parser import OASParser
-from oasbuilder.utils import (
-    endpoint_schema_dir,
-)
-from oasbuilder.utils.decorators import ensure_dest_exists
 from oasbuilder.types import YAML
+from oasbuilder.utils import endpoint_schema_dir
+from oasbuilder.utils.decorators import ensure_dest_exists
 
 
 class OASResponseSchemaWriter:

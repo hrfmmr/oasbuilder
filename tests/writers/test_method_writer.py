@@ -4,11 +4,8 @@ import pathlib
 
 import pytest
 import yaml
-
 from oasbuilder.models import HTTPMethod
-from oasbuilder.writer import (
-    OASEndpointMethodWriter,
-)
+from oasbuilder.writer import OASEndpointMethodWriter
 
 logger = logging.getLogger(__name__)
 

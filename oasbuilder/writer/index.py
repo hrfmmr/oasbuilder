@@ -3,10 +3,9 @@ import typing as t
 from dataclasses import asdict
 
 import yaml
-
-from oasbuilder.models import OASIndexInfo, OASSpecInfo, OASServer
+from oasbuilder.models import OASIndexInfo, OASServer, OASSpecInfo
 from oasbuilder.types import YAML
-from oasbuilder.utils import endpoint_root_dir, schema_root_dir
+from oasbuilder.utils import endpoint_root_dir
 
 
 class OASIndexWriter:
@@ -32,10 +31,14 @@ class OASIndexWriter:
         version: str,
         title: str,
         description: str,
-        server_urls: t.List[str] = [],
-        components: t.Dict[str, t.Any] = {},
+        server_urls: t.Optional[t.List[str]] = None,
+        components: t.Optional[t.Dict[str, t.Any]] = None,
     ) -> None:
         self.dest_root = dest_root
+        if not server_urls:
+            server_urls = []
+        if not components:
+            components = {}
         self.info = OASIndexInfo(
             openapi=openapi_version,
             info=OASSpecInfo(version, title, description),

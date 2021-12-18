@@ -2,7 +2,6 @@ import json
 import logging
 
 import pytest
-
 from oasbuilder.parser import OASParser
 
 logger = logging.getLogger(__name__)

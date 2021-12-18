@@ -4,29 +4,28 @@ import re
 import typing as t
 
 import yaml
-
 from oasbuilder.models import HTTPMethod, SchemaType
-from oasbuilder.utils import (
-    schema_root_dir,
-    to_endpoint_path,
-    build_schema_identifier,
-)
-from oasbuilder.utils.decorators import ensure_dest_exists
 from oasbuilder.types import YAML
-
+from oasbuilder.utils import build_schema_identifier, schema_root_dir, to_endpoint_path
+from oasbuilder.utils.decorators import ensure_dest_exists
 
 logger = logging.getLogger(__name__)
 
 method_patterns = "|".join([e.value for e in HTTPMethod])
 REX_REQUEST_PARAMS = re.compile(
-    r".*/components/schemas/(?P<endpoint_dir>.+)/(?P<method>{methods})/request_params.yml$".format(
-        methods=method_patterns
-    )
+    (
+        r".*/components/schemas"
+        r"/(?P<endpoint_dir>.+)"
+        r"/(?P<method>{methods})"
+        r"/request_params.yml$"
+    ).format(methods=method_patterns)
 )
 REX_REQUEST_BODY = re.compile(
-    r".*/components/schemas/(?P<endpoint_dir>.+)/(?P<method>{methods})/request_body.yml$".format(
-        methods=method_patterns
-    )
+    (
+        r".*/components/schemas"
+        r"/(?P<endpoint_dir>.+)/(?P<method>{methods})"
+        r"/request_body.yml$"
+    ).format(methods=method_patterns)
 )
 REX_RESPONSE_BODY = re.compile(
     r".*/components/schemas/(?P<endpoint_dir>.+)/(?P<method>{methods})".format(

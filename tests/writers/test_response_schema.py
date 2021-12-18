@@ -5,11 +5,8 @@ import pprint
 
 import pytest
 import yaml
-
 from oasbuilder.models import HTTPMethod
-from oasbuilder.writer import (
-    OASResponseSchemaWriter,
-)
+from oasbuilder.writer import OASResponseSchemaWriter
 
 logger = logging.getLogger(__name__)
 
@@ -43,9 +40,7 @@ class TestOASResponseSchemaWriter:
                             "name": {"type": "string"},
                             "postId": {"type": "integer"},
                         },
-                        "required": sorted(
-                            ["postId", "id", "name", "email", "body"]
-                        ),
+                        "required": sorted(["postId", "id", "name", "email", "body"]),
                         "type": "object",
                     },
                 ),
@@ -57,9 +52,7 @@ class TestOASResponseSchemaWriter:
         response_content_raw = input["_source"]["response"]["content"]
         try:
             response_content = (
-                json.loads(response_content_raw)
-                if response_content_raw
-                else None
+                json.loads(response_content_raw) if response_content_raw else None
             )
         except json.decoder.JSONDecodeError:
             response_content = None

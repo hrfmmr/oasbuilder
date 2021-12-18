@@ -1,31 +1,30 @@
 import json
 import logging
-import subprocess
 import os
 import pathlib
+import subprocess
 import typing as t
 from collections import defaultdict
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, urlparse
 
 import yaml
 from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
-
-from oasbuilder.constants import TEMPLATE_OAS_REF, OAS_REF
+from oasbuilder.constants import OAS_REF, TEMPLATE_OAS_REF
 from oasbuilder.logging import setup_logger
 from oasbuilder.models import HTTPMethod
+from oasbuilder.utils import parameterized_endpoint_path
 from oasbuilder.writer import (
+    OASEndpointMethodPatternWriter,
+    OASEndpointMethodWriter,
+    OASEndpointPatternWriter,
+    OASIndexWriter,
     OASRequestBodySchemaWriter,
-    OASResponseSchemaWriter,
     OASResponseContentWriter,
     OASResponsePatternWriter,
-    OASEndpointMethodWriter,
-    OASEndpointMethodPatternWriter,
-    OASEndpointPatternWriter,
+    OASResponseSchemaWriter,
     OASSchemaIndexWriter,
-    OASIndexWriter,
 )
-from oasbuilder.utils import parameterized_endpoint_path
 
 load_dotenv()
 ELASTICSEARCH_HOST = os.getenv("ELASTICSEARCH_HOST", "http://localhost:9200")
@@ -74,9 +73,7 @@ def main():
     result = es.search(
         index=ELASTICSEARCH_INDEX,
         aggs=dict(
-            requestpaths=dict(
-                terms=dict(field="request.path.keyword", size=10_000)
-            )
+            requestpaths=dict(terms=dict(field="request.path.keyword", size=10_000))
         ),
         _source=[
             "request.path",
@@ -113,16 +110,12 @@ def main():
             request_content_raw = info["request"]["content"]
             status_code = info["response"]["status_code"]
             request_content = (
-                json.loads(request_content_raw)
-                if request_content_raw
-                else None
+                json.loads(request_content_raw) if request_content_raw else None
             )
             response_content_raw = info["response"]["content"]
             try:
                 response_content = (
-                    json.loads(response_content_raw)
-                    if response_content_raw
-                    else None
+                    json.loads(response_content_raw) if response_content_raw else None
                 )
             except json.decoder.JSONDecodeError:
                 response_content = None
@@ -181,9 +174,7 @@ def main():
         title=os.environ["OAS_TITLE"],
         description=os.environ["OAS_DESCRIPTION"],
         server_urls=os.environ["OAS_SERVER_URLS"].split(","),
-        components={
-            "schemas": yaml.safe_load(schema_index_writer.dest.read_text())
-        },
+        components={"schemas": yaml.safe_load(schema_index_writer.dest.read_text())},
     )
     index_writer.write()
 

@@ -2,11 +2,10 @@ import pathlib
 import re
 
 import yaml
-
 from oasbuilder.models import HTTPMethod
+from oasbuilder.types import YAML
 from oasbuilder.utils import endpoint_dir
 from oasbuilder.utils.decorators import ensure_dest_exists
-from oasbuilder.types import YAML
 
 
 class OASResponsePatternWriter:
@@ -33,9 +32,7 @@ class OASResponsePatternWriter:
             / "_index.yml"
         )
         self.rex_status_code = re.compile(
-            r"^{}/(?P<status_code>[\d]+)/_index.ya?ml$".format(
-                str(self.dest.parent)
-            )
+            r"^{}/(?P<status_code>[\d]+)/_index.ya?ml$".format(str(self.dest.parent))
         )
 
     def _build(self) -> YAML:

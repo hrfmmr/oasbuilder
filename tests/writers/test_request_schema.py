@@ -5,11 +5,10 @@ import pprint
 
 import pytest
 import yaml
-
 from oasbuilder.models import HTTPMethod
 from oasbuilder.writer import (
-    OASRequestParamsSchemaWriter,
     OASRequestBodySchemaWriter,
+    OASRequestParamsSchemaWriter,
 )
 
 logger = logging.getLogger(__name__)

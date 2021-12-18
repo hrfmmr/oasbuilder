@@ -1,5 +1,5 @@
-import re
 import pathlib
+import re
 import typing as t
 
 from oasbuilder.models import HTTPMethod, SchemaType
@@ -102,22 +102,20 @@ def build_operation_id(method: HTTPMethod, endpoint_path: str) -> str:
     """
     rex = re.compile(r"^/v[\d]+/(?P<path>.+)")
     result = re.match(rex, endpoint_path)
-    path_without_version = result.group("path")
+    path_without_version = result.group("path")  # type: ignore
     if is_parameterized(endpoint_path):
         rex_path_param = re.compile(r"{(?P<res_id>.*_?id)}")
-        path_params = rex_path_param.findall(endpoint_path)
         operation_res = [
             s.capitalize()[:-1]
-            if [k for k in path_params if s[:-1] in k]
+            if [k for k in rex_path_param.findall(endpoint_path) if s[:-1] in k]
             else s.capitalize()
             for s in path_without_version.split("/")
             if not rex_path_param.match(s)
         ]
     else:
-        path_params = build_path_params(endpoint_path)
         operation_res = [
             s.capitalize()[:-1]
-            if [k for k in path_params if s[:-1] in k]
+            if [k for k in build_path_params(endpoint_path) if s[:-1] in k]
             else s.capitalize()
             for s in path_without_version.split("/")
             if not s.isdigit()

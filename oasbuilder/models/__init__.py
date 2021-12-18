@@ -1,7 +1,7 @@
 import logging
 import typing as t
+from dataclasses import asdict, dataclass
 from enum import Enum
-from dataclasses import dataclass, asdict
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class OASParameter:
     def build_oas_json(self) -> t.Dict[str, t.Any]:
         return asdict(self, dict_factory=self._dict_factory)
 
-    def _dict_factory(self, data) -> t.Dict[str, t.Any]:
+    def _dict_factory(self, data: t.List[t.Tuple[str, t.Any]]) -> dict:
         if data[0][0] == "_in":
             data[0] = ("in", data[0][1])
         return dict(data)

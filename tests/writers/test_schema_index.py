@@ -6,14 +6,9 @@ import typing as t
 
 import pytest
 import yaml
-
 from oasbuilder.models import HTTPMethod
-from oasbuilder.utils import (
-    schema_root_dir,
-)
-from oasbuilder.writer import (
-    OASSchemaIndexWriter,
-)
+from oasbuilder.utils import schema_root_dir
+from oasbuilder.writer import OASSchemaIndexWriter
 
 logger = logging.getLogger(__name__)
 

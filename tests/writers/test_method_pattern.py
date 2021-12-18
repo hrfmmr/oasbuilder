@@ -5,19 +5,14 @@ import pprint
 
 import pytest
 import yaml
-
 from oasbuilder.models import HTTPMethod
 from oasbuilder.utils import endpoint_dir
-from oasbuilder.writer import (
-    OASEndpointMethodPatternWriter,
-)
+from oasbuilder.writer import OASEndpointMethodPatternWriter
 
 logger = logging.getLogger(__name__)
 
 
-def touch_child(
-    dest_root: pathlib.Path, endpoint_path: str, method: HTTPMethod
-):
+def touch_child(dest_root: pathlib.Path, endpoint_path: str, method: HTTPMethod):
     path = (
         dest_root
         / endpoint_dir(endpoint_path)

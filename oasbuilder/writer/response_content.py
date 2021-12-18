@@ -2,16 +2,11 @@ import pathlib
 import typing as t
 
 import yaml
-
 from oasbuilder.constants import TEMPLATE_OAS_REF
 from oasbuilder.models import HTTPMethod, SchemaType
-from oasbuilder.utils import (
-    endpoint_dir,
-    response_description,
-    build_schema_identifier,
-)
-from oasbuilder.utils.decorators import ensure_dest_exists
 from oasbuilder.types import YAML
+from oasbuilder.utils import build_schema_identifier, endpoint_dir, response_description
+from oasbuilder.utils.decorators import ensure_dest_exists
 
 
 class OASResponseContentWriter:
@@ -35,7 +30,7 @@ class OASResponseContentWriter:
         endpoint_path: str,
         method: HTTPMethod,
         status_code: int,
-        response_content: t.Optional[t.Dict[str, t.Any]],
+        response_content: t.Optional[t.Any],
     ) -> None:
         self.dest_root = dest_root
         self.endpoint_path = endpoint_path
@@ -58,21 +53,19 @@ class OASResponseContentWriter:
 
     def _build(self) -> YAML:
         description = response_description(self.status_code)
-        oas_json = {
+        oas_json: t.Dict[str, t.Any] = {
             "description": description,
         }
         if self.response_content and (
-            type(self.response_content) is dict
-            or type(self.response_content) is list
+            isinstance(self.response_content, dict)
+            or isinstance(self.response_content, list)
         ):
             schema_id = build_schema_identifier(
                 self.method, self.endpoint_path, SchemaType.RESPONSE_BODY
             )
             oas_json["content"] = {
                 "application/json": {
-                    "schema": {
-                        TEMPLATE_OAS_REF: f"#/components/schemas/{schema_id}"
-                    }
+                    "schema": {TEMPLATE_OAS_REF: f"#/components/schemas/{schema_id}"}
                 }
             }
         return yaml.dump(oas_json)
