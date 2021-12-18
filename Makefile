@@ -7,6 +7,7 @@ default: bootstrap
 .PHONY: bootstrap
 bootstrap:
 	poetry install
+	npm i
 
 .PHONY: run
 run:
@@ -23,6 +24,11 @@ format:
 .PHONY: test
 test:
 	$(poetry-run) pytest
+
+.PHONY: test-all
+test-all:
+	"$(MAKE)" lint
+	"$(MAKE)" test
 
 .PHONY: testw
 testw:
