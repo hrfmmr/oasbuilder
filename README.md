@@ -1,4 +1,6 @@
 # oasbuilder
+[![Continuous Integration Status](https://github.com/hrfmmr/oasbuilder/workflows/CI/badge.svg)](https://github.com/hrfmmr/oasbuilder/workflows/CI/badge.svg)
+
 OpenAPI Specification generator by using JSON stored via [mitmproxy-elasticagent](https://github.com/hrfmmr/mitmproxy-elasticagent)
 
 ## Set up
