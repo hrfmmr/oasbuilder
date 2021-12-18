@@ -67,16 +67,20 @@ class TestIntegratedWriters:
                 ],
                 dict(
                     paths=[
+                        "components/schemas/_index.yml",
+                        "components/schemas/v1-posts/post/request_body.yml",
+                        "components/schemas/v1-posts/post/responses/200/_index.yml",
+                        "components/schemas/v1-posts-{post_id}-comments/get/responses/200/_index.yml",
                         "index.yml",
                         "paths/_index.yml",
-                        "paths/v1-posts-{post_id}-comments/_index.yml",
-                        "paths/v1-posts-{post_id}-comments/get/_index.yml",
-                        "paths/v1-posts-{post_id}-comments/get/responses/_index.yml",  # noqa
-                        "paths/v1-posts-{post_id}-comments/get/responses/200/_index.yml",  # noqa
                         "paths/v1-posts/_index.yml",
                         "paths/v1-posts/post/_index.yml",
-                        "paths/v1-posts/post/responses/_index.yml",
                         "paths/v1-posts/post/responses/200/_index.yml",
+                        "paths/v1-posts/post/responses/_index.yml",
+                        "paths/v1-posts-{post_id}-comments/_index.yml",
+                        "paths/v1-posts-{post_id}-comments/get/_index.yml",
+                        "paths/v1-posts-{post_id}-comments/get/responses/200/_index.yml",
+                        "paths/v1-posts-{post_id}-comments/get/responses/_index.yml",
                     ],
                     yaml={
                         "components": {
@@ -288,7 +292,9 @@ class TestIntegratedWriters:
         logger.debug(pprint.pformat(list(dest_root.glob("**/*.yml")), indent=2))
         logger.debug(index_writer.dest.read_text())
 
-        for path, exp_path in zip(dest_root.glob("**/*.yml"), expected["paths"]):
+        for path, exp_path in zip(
+            sorted(dest_root.glob("**/*.yml")), expected["paths"]
+        ):
             assert str(path) == str(dest_root / exp_path)
 
         bundle_dest_path = pathlib.Path(".test/bundle.yml")
